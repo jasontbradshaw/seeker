@@ -1,4 +1,4 @@
-import Queue
+import util
 
 class Seeker(object):
     """
@@ -48,28 +48,25 @@ class Seeker(object):
         """
         
         # priorty queue keeps items in form (priority, data)
-        frontier = Queue.PriorityQueue()
+        frontier = util.PriorityQueue()
         
         # paths from start to a given node, list of (action, total_cost)
         paths = {}
         paths[start] = [(None, 0)] # start node always has an empty path from 'start'
         
         # already expored nodes
-        explored_set = set([])
-        
-        # set of nodes in the frontier (memory inefficient, but faster)
-        frontier_set = set([])
+        explored = set([])
         
         # put the starting node into the frontier along with an 'f' value
         # of zero.  'f' doesn't matter initially since start node is always
         # the only one in the queue to begin with and is immediately popped
-        frontier.put( (0, start) )
+        frontier.put(start, 0)
         
         # loop until we've found a solution, or are out of nodes to check
         while not frontier.empty():
             
             # expand the 'best looking' node (originally the start node)
-            node = frontier.get_nowait()[1]
+            node = frontier.get()
             
             # return the solution if we found it
             if node == goal:
@@ -82,12 +79,12 @@ class Seeker(object):
                 return final_path
             
             # add node to set of explored nodes to prevent loops
-            explored_set.add(node)
+            explored.add(node)
             
             # add this node's children to the frontier
             for child, action, cost in self.successors(node):
                 # don't re-add an already explored node
-                if child not in explored_set and child not in frontier_set:
+                if child not in explored and child not in frontier:
                     # update path to get to this child from start state by
                     # appending 'action' to path to get to the parent node
                     child_path = list(paths[node]) # make a copy
@@ -101,10 +98,8 @@ class Seeker(object):
                     
                     # add the child with its 'f' value
                     f = g + self.heuristic(child, goal)
-                    frontier.put( (f, child) )
+                    frontier.put(child, f)
 
-                    frontier_set.add(child)
-                
         # couldn't find a solution
         return None
 

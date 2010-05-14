@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import pysearch
+import seeker
 
 def main():
     def succ(state):
@@ -50,7 +50,7 @@ def main():
         return 0
 
     # do actual searching
-    s = pysearch.Seeker(succ, heur)
+    s = seeker.Seeker(succ, heur)
     
     import itertools
 

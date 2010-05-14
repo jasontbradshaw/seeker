@@ -89,8 +89,8 @@ class Seeker(object):
                     # appending 'action' to path to get to the parent node
                     child_path = list(paths[node]) # make a copy
                     
-                    # keep a running total of path cost for the children
-                    # (cost of last item in path)
+                    # keep a running total of path cost for the children;
+                    # cost is a tally and latest is in last item of path
                     g = cost + paths[node][-1][1]
                     
                     child_path.append( (action, g) )
@@ -149,7 +149,8 @@ def main():
         """
         
         return 0
-    
+
+    # do actual searching
     s = Seeker(succ, heur)
     
     import itertools
